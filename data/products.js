@@ -656,5 +656,36 @@ const products = [
       "apparel",
       "mens"
     ]
+  },
+
+  {
+    id: "id1",
+    image: "images/products/backpack.jpg",
+    name: "Black Tactical Backpack",
+    rating: {
+      stars: 5,
+      count: 2302
+    },
+    priceCents: 2599,
+    keywords: [
+      "backback",
+      "bookbag",
+      "bag"
+    ]
+  },
+
+  {
+    id: "id2",
+    image: "images/products/umbrella.jpg",
+    name: "EcoShield Compact Travel Umbrella",
+    rating: {
+      stars: 3,
+      count: 49
+    },
+    priceCents: 999,
+    keywords: [
+      "umbrella",
+      "umbrellas",
+    ]
   }
 ];
