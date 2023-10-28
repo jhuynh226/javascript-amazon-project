@@ -1,5 +1,7 @@
+//Empty string to store generated HTML in
 let productsHTML = ``;
 
+//Generate HTML for each product and store into productsHTML string
 products.forEach((product) => {
   productsHTML =
     productsHTML +
@@ -59,23 +61,34 @@ products.forEach((product) => {
     `;
 });
 
+//Display generated HTML onto the page by storing it in the grid
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
+//Generate JavaScript for each add to cart button
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
+  //Global timeout variable
+  let addToCartTimeout;
+  //Onclick event for each add to cart button
   button.addEventListener("click", () => {
+    //Obtain product ID from button's data attribute
     const { productId } = button.dataset;
+    //matchingId variable to check if product ID is already in cart
     let matchingId;
 
+    //Obtain the number of items to add to cart from the drop down selector
     let quantity = Number(
       document.querySelector(`.js-quantity-selector-${productId}`).value
     );
 
+    //Check if item Id is already in cart, if so add it to the matchingId variable
     cart.forEach((item) => {
       if (productId === item.productId) {
         matchingId = item;
       }
     });
 
+    //If anything is in matchingId variable, update the quantity of product id
+    //Otherwise push the new item into cart
     if (matchingId) {
       matchingId.quantity = matchingId.quantity + quantity;
     } else {
@@ -85,15 +98,28 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
       });
     }
 
+    //Create access the "added to cart" text after hitting the button
     let addToCart = document.querySelector(`.js-added-to-cart-${productId}`);
+    //Add class "added-to-cart-opacity" to manipulate the opacity of the added to cart text
     addToCart.classList.add("added-to-cart-opacity");
-    console.log(addToCart.classList);
 
+    //If anything is in addToCartTimeout variable, clear the timeout
+    if (addToCartTimeout) {
+      clearTimeout(addToCartTimeout);
+    }
+
+    //Remove the added to cart text after 2 seconds
+    addToCartTimeout = setTimeout(() => {
+      addToCart.classList.remove("added-to-cart-opacity");
+    }, 2000);
+
+    //Gerate the total cart quantity
     let cartQuantity = 0;
     cart.forEach((item) => {
       cartQuantity += item.quantity;
     });
 
+    //Display the total cart quantity on the page
     document.querySelector(".cart-quantity").innerHTML = cartQuantity;
   });
 });
