@@ -1,4 +1,5 @@
 import {cart} from '../data/carts.js';
+import {products} from '../data/products.js';
 
 //Empty string to store generated HTML in
 let productsHTML = ``;
