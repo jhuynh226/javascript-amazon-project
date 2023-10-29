@@ -1,8 +1,12 @@
-import {cart} from '../data/carts.js';
-import {products} from '../data/products.js';
+import { cart, addToCart } from "../data/carts.js";
+import { products } from "../data/products.js";
 
 //Empty string to store generated HTML in
 let productsHTML = ``;
+
+function hello() {
+  console.log("hello");
+}
 
 //Generate HTML for each product and store into productsHTML string
 products.forEach((product) => {
@@ -71,58 +75,46 @@ document.querySelector(".js-products-grid").innerHTML = productsHTML;
 document.querySelectorAll(".js-add-to-cart").forEach((button) => {
   //Global timeout variable
   let addToCartTimeout;
+
   //Onclick event for each add to cart button
   button.addEventListener("click", () => {
     //Obtain product ID from button's data attribute
     const { productId } = button.dataset;
-    //matchingId variable to check if product ID is already in cart
-    let matchingId;
 
-    //Obtain the number of items to add to cart from the drop down selector
-    let quantity = Number(
-      document.querySelector(`.js-quantity-selector-${productId}`).value
-    );
+    //Adds products to cart
+    addToCart(productId);
 
-    //Check if item Id is already in cart, if so add it to the matchingId variable
-    cart.forEach((item) => {
-      if (productId === item.productId) {
-        matchingId = item;
-      }
-    });
+    //Display the added to cart text onclick
+    showAddToCartText(addToCartTimeout, productId);
 
-    //If anything is in matchingId variable, update the quantity of product id
-    //Otherwise push the new item into cart
-    if (matchingId) {
-      matchingId.quantity = matchingId.quantity + quantity;
-    } else {
-      cart.push({
-        productId,
-        quantity,
-      });
-    }
-
-    //Create access the "added to cart" text after hitting the button
-    let addToCart = document.querySelector(`.js-added-to-cart-${productId}`);
-    //Add class "added-to-cart-opacity" to manipulate the opacity of the added to cart text
-    addToCart.classList.add("added-to-cart-opacity");
-
-    //If anything is in addToCartTimeout variable, clear the timeout
-    if (addToCartTimeout) {
-      clearTimeout(addToCartTimeout);
-    }
-
-    //Remove the added to cart text after 2 seconds
-    addToCartTimeout = setTimeout(() => {
-      addToCart.classList.remove("added-to-cart-opacity");
-    }, 2000);
-
-    //Gerate the total cart quantity
-    let cartQuantity = 0;
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;
-    });
-
-    //Display the total cart quantity on the page
-    document.querySelector(".cart-quantity").innerHTML = cartQuantity;
+    //Updates Cart quantity
+    updateCartQuantity();
   });
 });
+
+function showAddToCartText(addToCartTimeout, productId) {
+  //Create access to "added to cart" text after hitting the button
+  let addToCartText = document.querySelector(`.js-added-to-cart-${productId}`);
+  //Add class "added-to-cart-opacity" to manipulate the opacity of the added to cart text
+  addToCartText.classList.add("added-to-cart-opacity");
+
+  //If anything is in addToCartTimeout variable, clear the timeout
+  if (addToCartTimeout) {
+    clearTimeout(addToCartTimeout);
+  }
+
+  //Remove the added to cart text after 2 seconds
+  addToCartTimeout = setTimeout(() => {
+    addToCartText.classList.remove("added-to-cart-opacity");
+  }, 2000);
+}
+
+function updateCartQuantity() {
+  let cartQuantity = 0;
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
+  //Display the total cart quantity on the page
+  document.querySelector(".cart-quantity").innerHTML = cartQuantity;
+}
