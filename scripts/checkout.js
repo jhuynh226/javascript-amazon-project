@@ -1,6 +1,8 @@
-import { cart, removeFromCart } from "../data/carts.js";
+import { cart, removeFromCart, currentCartQuantity } from "../data/carts.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
+
+document.querySelector(".js-checkout-header-middle-section").innerHTML = `Checkout (<a class="return-to-home-link" href="amazon.html">${currentCartQuantity()} items</a>)`;
 
 let cartSummaryHTML = "";
 
@@ -98,7 +100,6 @@ document.querySelectorAll(".js-delete-link").forEach((link) => {
     removeFromCart(productId);
 
     const container = document.querySelector(`.js-cart-item-container-${productId}`);
-    console.log(container);
     container.remove();
   });
 });
