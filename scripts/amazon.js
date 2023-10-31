@@ -9,10 +9,6 @@ updateCartQuantity();
 //Empty string to store generated HTML in
 let productsHTML = ``;
 
-function hello() {
-  console.log("hello");
-}
-
 //Generate HTML for each product and store into productsHTML string
 products.forEach((product) => {
   productsHTML =
