@@ -60,7 +60,7 @@ export function removeFromCart(productId) {
 
   cart = newCart;
 
-  updateCartQuantity();
+  updateQuantity();
   saveToStorage();
 }
 
@@ -72,4 +72,15 @@ export function calculateCartQuantity() {
   });
 
   return cartQuantity;
+}
+
+export function updateQuantity(productId, newQuantity) {
+  cart.forEach((cartItem) => {
+    if (cartItem.productId === productId) {
+      cartItem.quantity = newQuantity;
+    }
+  });
+
+  saveToStorage();
+  console.log(cart);
 }
