@@ -1,7 +1,9 @@
+//Import functions/variables from other files
 import { cart, addToCart, calculateCartQuantity } from "../data/carts.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 
+//Load cart quantity into header
 updateCartQuantity();
 
 //Empty string to store generated HTML in
@@ -96,7 +98,7 @@ document.querySelectorAll(".js-add-to-cart").forEach((button) => {
 });
 
 function showAddToCartText(addToCartTimeout, productId) {
-  //Create access to "added to cart" text after hitting the button
+  //Create cart-quantity access to "added to cart" text after hitting the button
   let addToCartText = document.querySelector(`.js-added-to-cart-${productId}`);
   //Add class "added-to-cart-opacity" to manipulate the opacity of the added to cart text
   addToCartText.classList.add("added-to-cart-opacity");
@@ -112,9 +114,10 @@ function showAddToCartText(addToCartTimeout, productId) {
   }, 2000);
 }
 
+//Updates cart quantity display in header
 function updateCartQuantity() {
   let cartQuantity = calculateCartQuantity();
 
-  //Display the total cart quantity on the page
+  //Changes header cart HTML
   document.querySelector(".cart-quantity").innerHTML = cartQuantity;
 }

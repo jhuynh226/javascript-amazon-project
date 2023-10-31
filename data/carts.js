@@ -1,5 +1,7 @@
+//Loads cart from local storage
 export let cart = JSON.parse(localStorage.getItem("cart"));
 
+//If there is nothing in cart, then use these default values
 if (!cart) {
   cart = [
     {
@@ -14,6 +16,7 @@ if (!cart) {
   ];
 }
 
+//Saves cart into local storage
 function saveToStorage() {
   localStorage.setItem("cart", JSON.stringify(cart));
 }
@@ -28,59 +31,78 @@ export function addToCart(productId) {
     document.querySelector(`.js-quantity-selector-${productId}`).value
   );
 
-  //Check if item Id is already in cart, if so add it to the matchingId variable
+  //Loop through all items in the cart
   cart.forEach((cartItem) => {
+    //Check if product is already in cart, if so save it to the matchingId variable
     if (productId === cartItem.productId) {
       matchingId = cartItem;
     }
   });
 
   //If anything is in matchingId variable, update the quantity of product id
-  //Otherwise push the new item into cart
   if (matchingId) {
     matchingId.quantity = matchingId.quantity + quantity;
-  } else {
+  }
+
+  //Otherwise push the new item into cart
+  else {
     cart.push({
       productId,
       quantity,
     });
   }
 
+  //Save updated cart into local storage
   saveToStorage();
 }
 
+//Removes product from cart
 export function removeFromCart(productId) {
+  //Create a new cart array
   const newCart = [];
 
+  //Loop through all the cart items in cart
   cart.forEach((cartItem) => {
+    //If cart item is not equal to the product item you want to remove
     if (cartItem.productId !== productId) {
+      //Push the cart item into newCart
       newCart.push(cartItem);
     }
   });
 
+  //Update the cart array with the removed product
   cart = newCart;
 
-  updateQuantity();
+  //Saves new cart into local storage
   saveToStorage();
 }
 
+//Calculate total cart quantity
 export function calculateCartQuantity() {
+  //Intiailize cartQuantity to 0
   let cartQuantity = 0;
-  
+
+  //Loop through each cart item in cart
   cart.forEach((cartItem) => {
+    //Add each cart item quantity into the cartQuantity
     cartQuantity += cartItem.quantity;
   });
 
+  //returns the new cart quantity
   return cartQuantity;
 }
 
+//Updates the quantity of a cart's product by passing it the id and new quantity
 export function updateQuantity(productId, newQuantity) {
+  //Loop through each cart item in cart
   cart.forEach((cartItem) => {
+    //If cart items productId is equal to the passed productId
     if (cartItem.productId === productId) {
+      //Update cart item's quantity with the new quantity
       cartItem.quantity = newQuantity;
     }
   });
 
+  //Save the new modified cart into local storage
   saveToStorage();
-  console.log(cart);
 }
