@@ -1,5 +1,5 @@
 //Import functions/variables from other files
-import { cart, addToCart, calculateCartQuantity } from "../data/carts.js";
+import { addToCart, calculateCartQuantity } from "../data/carts.js";
 import { products } from "../data/products.js";
 import { formatCurrency } from "./utils/money.js";
 

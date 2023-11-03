@@ -1,4 +1,6 @@
-//Import functions/variables from other files
+//Import functions/variables/files
 import { renderOrderSummary } from "./checkout/orderSummary.js";
+import { renderPaymentSummary } from "./checkout/paymentSummary.js"
 
 renderOrderSummary();
+renderPaymentSummary();
