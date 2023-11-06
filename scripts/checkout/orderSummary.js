@@ -9,8 +9,13 @@ import {
 import { getProduct } from "../../data/products.js";
 import { formatCurrency } from "../utils/money.js";
 import dayjs from "https://unpkg.com/dayjs@1.11.10/esm/index.js";
-import { deliveryOptions, getDeliveryOption } from "../../data/deliveryOptions.js";
-import { renderPaymentSummary } from "./paymentSummary.js"
+import {
+  deliveryOptions,
+  getDeliveryOption,
+  calculateDeliveryDate,
+} from "../../data/deliveryOptions.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
+import { renderCheckoutHeader } from "./checkoutHeader.js";
 
 //Rerender all the HTML in the order section
 export function renderOrderSummary() {
@@ -32,16 +37,10 @@ export function renderOrderSummary() {
     const deliveryOptionId = cartItem.deliveryOptionId;
 
     //Empty variable to store matching deliveryOption
-    const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId)
-    
-    //Get date from dayjs external library
-    const today = dayjs();
-
-    //Get deliverydays from deliveryoption object and add to current date
-    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
+    const deliveryOption = getDeliveryOption(cartItem.deliveryOptionId);
 
     //Format date in easy to read format
-    const dateString = deliveryDate.format("dddd, MMMM D");
+    const dateString = calculateDeliveryDate(deliveryOption);
 
     //Generate HTML using the matchingProduct information
     cartSummaryHTML += `
@@ -113,17 +112,9 @@ export function renderOrderSummary() {
       //Call method to remove product id from the cart
       removeFromCart(productId);
 
-      //Obtain the container holding the desired delete link from the HTML
-      const container = document.querySelector(
-        `.js-cart-item-container-${productId}`
-      );
-
-      //Remove the container HTML from the div using the remove method
-      //Remove method automatically provided
-      container.remove();
-
       //Updates the cart quantity in the header
       updateCartQuantity();
+      renderOrderSummary();
     });
   });
 
@@ -245,10 +236,8 @@ function updateCartQuantity() {
   //Obtains the total cart quantity
   let cartQuantity = calculateCartQuantity();
 
-  //Updates header of checkout page with the new total cart quantity
-  document.querySelector(
-    ".js-checkout-header-middle-section"
-  ).innerHTML = `Checkout (<a class="return-to-home-link" href="amazon.html">${cartQuantity} items</a>)`;
+  //Updates header of checkout page and payment section with the new total cart quantity
+  renderCheckoutHeader();
   renderPaymentSummary();
 }
 
@@ -265,9 +254,7 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
   let html = "";
 
   deliveryOptions.forEach((deliveryOption) => {
-    const today = dayjs();
-    const deliveryDate = today.add(deliveryOption.deliveryDays, "days");
-    const dateString = deliveryDate.format("dddd, MMMM D");
+    const dateString = calculateDeliveryDate(deliveryOption);
 
     const priceString =
       deliveryOption.priceCents === 0
